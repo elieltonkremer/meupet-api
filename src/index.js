@@ -4,7 +4,8 @@ const app = new ApplicationContext([
     'logos/Command',
     'logos-schema',
     "./Server",
-    "./Authentication"
+    "./Authentication",
+    "./Tutor",
 ])
 
 const command = app.get('app.command')

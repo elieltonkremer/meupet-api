@@ -11,7 +11,7 @@ class PasswordDataType extends StringDataType {
             hash.update(data)
             if (data > 8 && data !== hash.digest('hex'))
                 new ValidationError('Incorrect password')
-            return hash.digest()
+            return hash.digest('utf-8')
         }
         throw new ValidationError('Invalid password')
     }

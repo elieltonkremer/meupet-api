@@ -7,6 +7,18 @@ services:
     - backend
     ports:
     - 3001:3001
+    environment:
+      MONGO_USERNAME: root
+      MONGO_PASSWORD: root
+
+#  mongo:
+#    image: mongo:4
+#    restart: always
+#    networks:
+#      - backend
+#    environment:
+#      MONGO_INITDB_ROOT_USERNAME: root
+#      MONGO_INITDB_ROOT_PASSWORD: root
 
 networks:
   backend: ~

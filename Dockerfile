@@ -1,9 +1,9 @@
-FROM fedora:33
+FROM fedora:34
 
 RUN dnf update -y
-RUN dnf module install nodejs:12 -y
+RUN dnf module install nodejs:14 -y
 
-VOLUME . /tcc/
+COPY ./package.json /tcc/
 
 WORKDIR /tcc/
 

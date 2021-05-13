@@ -1,15 +1,29 @@
-const { Container, ServiceResource, ParameterResource } = require("logos")
+const { Container, ServiceResource, ParameterResource, StackContainer } = require("logos")
 
 
 module.exports = {
-    container: new Container({
-        'app.data_type.password': new ServiceResource(
-            './Authentication/DataType/PasswordDataType',
-            [
-                '%context%'
-            ]
-        ),
-        'app.schema.user': new ParameterResource('./Authentication/Schema/User')
-    })
+    container: new StackContainer([
+        new Container({
+            'app.data_type.password': new ServiceResource(
+                './Authentication/DataType/PasswordDataType',
+                [
+                    '%context%'
+                ]
+            ),
+            'app.http_handler.register': new ServiceResource(
+                "./Authentication/Handler/RegisterHandler",
+                [
+                    '%context%'
+                ]
+            ),
+            'app.http_handler.confirmation': new ServiceResource(
+                "./Authentication/Handler/ConfirmationHandler",
+                [
+                    '%context%'
+                ]
+            ),
+        }),
+        require('./Schema')
+    ])
 }
 
