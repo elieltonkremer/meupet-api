@@ -1,7 +1,9 @@
 const AbstractCommand = require('logos/Command/AbstractCommand')
 const AbstractContext = require('logos/Context/AbstractContext')
+const RuntimeContext = require('logos/Context/RuntimeContext');
 const express = require('express');
 const bodyParser = require('body-parser');
+const { MongoClient } = require('mongodb')
 
 class HttpServerCommand extends AbstractCommand {
 
@@ -26,9 +28,17 @@ class HttpServerCommand extends AbstractCommand {
         app.use(bodyParser.json());
         app.listen(this.argument.port)
         app.route('/:handler').all(async function (request, response) {
-            let context = new AbstractContext(self.context)
+            let client = new MongoClient('\'mongodb://localhost:27017/')
+            let runtime = {}
+            let context = new RuntimeContext(self.context, runtime)
             return await context.with(null, async function(context) {
-                return await context.get('app.http_handler').handle(request, response)
+                try {
+                    await client.connect()
+                    runtime['app.persistence'] = client.db('tcc')
+                    return await context.get('app.http_handler').handle(request, response)
+                } finally {
+                    await  client.close()
+                }
             })
         })
         return await new Promise(function(resolve) {

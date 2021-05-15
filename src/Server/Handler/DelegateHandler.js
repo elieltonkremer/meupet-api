@@ -1,6 +1,6 @@
 const AbstractContainer = require('logos/Context/AbstractContainer')
 const AbstractHandler = require('./AbstractHandler')
-
+const ValidationError = require('logos-schema/DataType/ValidationError')
 
 class DelegateHandler extends AbstractHandler {
 
@@ -33,6 +33,14 @@ class DelegateHandler extends AbstractHandler {
             return await handler.handle(request, response)
 
         } catch (e) {
+            if (e instanceof ValidationError)
+                return response
+                    .contentType('application/json')
+                    .status(402)
+                    .send(JSON.stringify({
+                        success: false,
+                        data: e.message
+                    }))
             return response
                 .contentType('application/json')
                 .status(e.status || 500)
