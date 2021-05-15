@@ -1,0 +1,26 @@
+{
+  "name": "tcc-api",
+  "version": "1.0.0",
+  "description": "TCC Project",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/elieltonkremer/tcc-api.git"
+  },
+  "author": "Elielton Kremer",
+  "license": "BSD-2-Clause",
+  "bugs": {
+    "url": "https://github.com/elieltonkremer/tcc-api/issues"
+  },
+  "homepage": "https://github.com/elieltonkremer/tcc-api#readme",
+  "dependencies": {
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "logos": "github:elieltonkremer/logos-js",
+    "logos-schema": "github:elieltonkremer/logos-js-schema",
+    "mongodb": "^3.6.6"
+  }
+}
