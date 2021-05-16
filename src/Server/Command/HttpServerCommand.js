@@ -1,9 +1,10 @@
 const AbstractCommand = require('logos/Command/AbstractCommand')
 const AbstractContext = require('logos/Context/AbstractContext')
 const RuntimeContext = require('logos/Context/RuntimeContext');
-const express = require('express');
-const bodyParser = require('body-parser');
+const express = require('express')
+const bodyParser = require('body-parser')
 const { MongoClient } = require('mongodb')
+const cors = require('cors')
 
 class HttpServerCommand extends AbstractCommand {
 
@@ -26,6 +27,7 @@ class HttpServerCommand extends AbstractCommand {
         const self = this;
         let app = express()
         app.use(bodyParser.json());
+        app.use(cors())
         app.listen(this.argument.port)
         app.route('/:handler').all(async function (request, response) {
             let client = new MongoClient('\'mongodb://localhost:27017/')

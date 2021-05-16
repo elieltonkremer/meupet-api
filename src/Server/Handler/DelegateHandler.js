@@ -41,6 +41,9 @@ class DelegateHandler extends AbstractHandler {
                         success: false,
                         data: e.message
                     }))
+            if (!e.message) {
+              console.error(e)
+            }
             return response
                 .contentType('application/json')
                 .status(e.status || 500)

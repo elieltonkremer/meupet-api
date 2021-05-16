@@ -17,7 +17,7 @@ class LoginHandler extends AbstractHandler {
         let data = await data_type.toJS(request.body, {
             properties: {
                 email: {
-                    type: 'string',
+                    type: 'email',
                     required: true
                 },
                 password: {
@@ -38,6 +38,8 @@ class LoginHandler extends AbstractHandler {
             return response
                 .contentType('application/json')
                 .send(JSON.stringify({
+                  success: true,
+                  data: {
                     token: await new Promise(function (resolve, reject) {
                         sign({
                             user: user._id
@@ -47,6 +49,7 @@ class LoginHandler extends AbstractHandler {
                             resolve(data)
                         })
                     })
+                  }
                 }))
 
         }

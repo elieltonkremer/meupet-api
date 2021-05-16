@@ -11,6 +11,12 @@ module.exports = {
                     '%context%'
                 ]
             ),
+            'app.data_type.email': new ServiceResource(
+                './Authentication/DataType/EmailDataType',
+                [
+                    '%context%'
+                ]
+            ),
             'app.http_handler.register': new ServiceResource(
                 "./Authentication/Handler/RegisterHandler",
                 [
@@ -33,4 +39,3 @@ module.exports = {
         require('./Schema')
     ])
 }
-
