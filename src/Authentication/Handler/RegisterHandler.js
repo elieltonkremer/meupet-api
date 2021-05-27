@@ -11,6 +11,7 @@ class RegisterHandler extends AbstractHandler {
         let schema = this.container.get('app.schema.user')
         let data = await data_type.toJS(request.body, schema)
         let persistence = this.container.get('app.persistence')
+        let mailer = this.container.get('app.mailer')
 
         let users = await persistence.collection('users').find({
             email: data.email
@@ -21,6 +22,13 @@ class RegisterHandler extends AbstractHandler {
         }
 
         let result = await persistence.collection('users').insertOne(data)
+
+        mailer.sendMail({
+            from: process.env.EMAIL_USER || "tcc.senai.mailer@gmail.com",
+            to: data.email,
+            subject: 'tcc confirmation code',
+            text: `Your confirmation code is:  ${result.insertedId}`
+        })
 
         return response
             .contentType('application/json')

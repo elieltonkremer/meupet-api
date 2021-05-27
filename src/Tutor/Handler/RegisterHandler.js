@@ -10,15 +10,26 @@ class RegisterHandler extends PrivateHandler {
         let data_type = this.container.get('app.data_type.object')
         let user = await this.resolve_user(request)
         let schema = this.container.get('app.schema.tutor')
+        let persistence = this.container.get('app.persistence')
+
+        if (user.type.indexOf('tutor') === -1)
+            throw {status: 404, message: "This is not tutor account"}
+
+        if (await persistence.collection('tutors').findOne({user: user._id}))
+            throw {status: 402, message: "Tutor already registered"}
+
         let data = await data_type.toJS({
             ...request.body,
             user: user._id
         }, schema)
+
+        let status = await persistence.collection('tutors').insertOne(data)
+
         return response
             .contentType('application/json')
             .send({
                 success: true,
-                data: await data_type.toJSON(data, schema)
+                data: 'Tutor successful registered'
             })
     }
 }

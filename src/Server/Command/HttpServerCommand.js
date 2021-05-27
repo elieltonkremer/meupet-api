@@ -4,6 +4,7 @@ const RuntimeContext = require('logos/Context/RuntimeContext');
 const express = require('express')
 const bodyParser = require('body-parser')
 const { MongoClient } = require('mongodb')
+const nodemailer = require('nodemailer')
 const cors = require('cors')
 
 class HttpServerCommand extends AbstractCommand {
@@ -37,6 +38,13 @@ class HttpServerCommand extends AbstractCommand {
                 try {
                     await client.connect()
                     runtime['app.persistence'] = client.db('tcc')
+                    runtime['app.mailer'] = nodemailer.createTransport({
+                        service: 'gmail',
+                        auth: {
+                            user: process.env.EMAIL_USER || 'tcc.senai.mailer@gmail.com' ,
+                            pass: process.env.EMAIL_PASSWORD || "10101023"
+                        }
+                    })
                     return await context.get('app.http_handler').handle(request, response)
                 } finally {
                     await  client.close()

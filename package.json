@@ -22,6 +22,7 @@
     "jsonwebtoken": "^8.5.1",
     "logos": "github:elieltonkremer/logos-js",
     "logos-schema": "github:elieltonkremer/logos-js-schema",
-    "mongodb": "^3.6.6"
+    "mongodb": "^3.6.6",
+    "nodemailer": "^6.6.1"
   }
 }

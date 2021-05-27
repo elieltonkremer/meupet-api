@@ -17,7 +17,7 @@ class PrivateHandler extends AbstractHandler {
     async resolve_user(request) {
         const self = this
         if (!request.headers.authorization)
-            throw {status: 401, message: {success: false, data: {message: "login required"}}}
+            throw {status: 401, message: 'login required'}
 
         let token = await new Promise(function (resolve, reject) {
             verify(request.headers.authorization.replace('Bearer ', ''), self.container.get('app.configuration.jwt_secret'), function (err, data) {
