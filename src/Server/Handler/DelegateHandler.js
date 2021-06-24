@@ -9,30 +9,39 @@ class DelegateHandler extends AbstractHandler {
      */
     constructor(container) {
         super(container);
+        this._routes = null
     }
 
     /**
-     * @return {AbstractHandler}
+     * @returns {{check: Function<Promise>, handle: Function<Promise>}[]}
      */
-    resolve_handler(name) {
-        if (!this.container.has(`app.http_handler.${name}`))
-            throw {
-                status: 404,
-                message: 'invalid handler name',
-            }
-        return this.container.get(`app.http_handler.${name}`)
+    get routes() {
+        const self = this;
+        if (!self._routes) {
+            console.log(self.container.get('groups.routes'))
+            self._routes =  self.container.get('groups.routes').map(function(name) {
+                return self.container.get(`app.routes.${name}`);
+            })
+        }
+        return this._routes
     }
 
-
+    /**
+     * @param request
+     * @param response
+     * @returns {Promise<Response|void>}
+     */
     async handle(request, response) {
         try {
-            const handler = this.resolve_handler(request.params.handler)
-            if (Array.isArray(handler.methods) && !handler.methods.includes(request.method))
-                throw {status: 405, message: `method not allowed for "${request.params.handler}" handler`}
-
-            return await handler.handle(request, response)
-
+            for (let route of this.routes) {
+                console.log(await route.check(request))
+                if (await route.check(request)) {
+                    return await route.handle(request, response)
+                }
+            }
+            throw {status: 404, message: 'not found'}
         } catch (e) {
+            console.log(e)
             if (e instanceof ValidationError)
                 return response
                     .contentType('application/json')
@@ -42,7 +51,7 @@ class DelegateHandler extends AbstractHandler {
                         data: e.message
                     }))
             if (!e.message) {
-              console.error(e)
+                console.error(e)
             }
             return response
                 .contentType('application/json')

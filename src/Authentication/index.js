@@ -1,10 +1,17 @@
 const { Container, ServiceResource, ParameterResource, StackContainer } = require("logos")
+const RouteResource = require('../Server/Resource/RouteResource')
 
 
 module.exports = {
     container: new StackContainer([
         new Container({
             'app.configuration.jwt_secret': new ParameterResource('tcc-api'),
+            'app.data_type.boolean': new ServiceResource(
+                'logos-schema/DataType/NativeDataType',
+                [
+                    '%context%'
+                ]
+            ),
             'app.data_type.password': new ServiceResource(
                 './Authentication/DataType/PasswordDataType',
                 [
@@ -17,24 +24,36 @@ module.exports = {
                     '%context%'
                 ]
             ),
-            'app.http_handler.register': new ServiceResource(
-                "./Authentication/Handler/RegisterHandler",
-                [
-                    '%context%'
-                ]
+            "app.routes.register": new RouteResource(
+                '/auth/register',
+                new ServiceResource(
+                    "./Authentication/Handler/RegisterHandler",
+                    [
+                        '%context%'
+                    ],
+                    ['POST']
+                ),
             ),
-            'app.http_handler.login': new ServiceResource(
-                "./Authentication/Handler/LoginHandler",
-                [
-                    '%context%'
-                ]
+            'app.routes.login': new RouteResource(
+                '/auth/login',
+                new ServiceResource(
+                    "./Authentication/Handler/LoginHandler",
+                    [
+                        '%context%'
+                    ]
+                ),
+                ["POST"]
             ),
-            'app.http_handler.confirmation': new ServiceResource(
-                "./Authentication/Handler/ConfirmationHandler",
-                [
-                    '%context%'
-                ]
-            ),
+            'app.routes.confirm': new RouteResource(
+              '/auth/confirmation',
+                new ServiceResource(
+                    "./Authentication/Handler/ConfirmationHandler",
+                    [
+                        '%context%'
+                    ]
+                ),
+                ['POST']
+            )
         }),
         require('./Schema')
     ])

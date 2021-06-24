@@ -3,7 +3,7 @@ const { Container, ServiceResource, ParameterResource, GroupResource } = require
 
 module.exports = {
     container: new Container({
-        'groups.http_handlers': new GroupResource(/^app.http_handler./),
+        'groups.routes': new GroupResource(/^app.routes./),
         'app.http_handler': new ServiceResource(
             "./Server/Handler/DelegateHandler",
             [

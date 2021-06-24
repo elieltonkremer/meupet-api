@@ -5,7 +5,9 @@ const app = new ApplicationContext([
     'logos-schema',
     "./Server",
     "./Authentication",
-    "./Tutor",
+    "./Account",
+    "./Pet",
+    "./Veterinary",
 ])
 
 const command = app.get('app.command')

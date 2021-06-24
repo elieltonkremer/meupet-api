@@ -30,8 +30,9 @@ class HttpServerCommand extends AbstractCommand {
         app.use(bodyParser.json());
         app.use(cors())
         app.listen(this.argument.port)
-        app.route('/:handler').all(async function (request, response) {
-            let client = new MongoClient('\'mongodb://localhost:27017/')
+        app.route(/^\/*/).all(async function (request, response) {
+            console.log(request.method, request.path);
+            let client = new MongoClient('mongodb://localhost:27017/')
             let runtime = {}
             let context = new RuntimeContext(self.context, runtime)
             return await context.with(null, async function(context) {

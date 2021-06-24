@@ -2,5 +2,5 @@ const { Container, ServiceResource, ParameterResource, GroupResource, StackConta
 
 
 module.exports = new Container({
-    'app.schema.tutor': new ParameterResource(require('./Tutor'))
+    'app.schema.account': new ParameterResource(require('./Account'))
 })

@@ -11,15 +11,17 @@ class PrivateHandler extends AbstractHandler {
 
     /**
      * @param { Request } request
+     * @param { Boolean } pending
      * @throws Error
      * @return {Promise<{}>}
      */
-    async resolve_user(request) {
+    async resolve_user(request, pending= false) {
         const self = this
         if (!request.headers.authorization)
             throw {status: 401, message: 'login required'}
 
         let token = await new Promise(function (resolve, reject) {
+            console.log(request.headers.authorization)
             verify(request.headers.authorization.replace('Bearer ', ''), self.container.get('app.configuration.jwt_secret'), function (err, data) {
                 if (err)
                     return reject({status: 401, message: "invalid token"})
@@ -37,12 +39,17 @@ class PrivateHandler extends AbstractHandler {
             user_id = token.user
         }
 
-        let users = await persistence.collection('users').find({
+        let status = ['active']
+
+        if (pending)
+            status.push('pending')
+
+        let user = await persistence.collection('users').findOne({
             _id: user_id,
-            status: 'active'
+            status: {$in: status}
         })
 
-        for await (let user of users ) {
+        if (user && (user.status === 'active' || pending) ) {
             return user
         }
 

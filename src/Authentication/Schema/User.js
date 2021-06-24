@@ -13,11 +13,6 @@ module.exports = {
             required: true,
             application_id: "tcc"
         },
-        type: {
-            type: "string",
-            required: true,
-            choices: ['tutor', 'veterinary', 'admin']
-        },
         status: {
             type: 'string',
             default: function(context) {
